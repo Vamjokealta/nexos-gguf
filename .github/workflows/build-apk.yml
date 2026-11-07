@@ -15,22 +15,28 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
+      - name: Clean Any Committed Gradle Caches
+        run: |
+          rm -rf .gradle
+          rm -rf android/app/build
+          rm -rf build
+
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup Gradle
+      - name: Setup Gradle (No Remote Cache)
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 8.7
+          cache-disabled: true
 
       - name: Configure Android SDK & Licenses
         run: |
           echo "sdk.dir=/usr/local/lib/android/sdk" > local.properties
           mkdir -p /usr/local/lib/android/sdk/licenses
-          # Standard license hashes for Android SDK, NDK, and CMake
           printf "24333f8a63b6825ea9c5514f83c2829b004d1fee\nd56f5187479451eabf01fb78af6dfcb131a6481e\n8563bc79c7e07d83d2e130491d504338774724d5" > /usr/local/lib/android/sdk/licenses/android-sdk-license
           printf "84831b9409646a241416e099a9a3b839958dc18b" > /usr/local/lib/android/sdk/licenses/android-sdk-preview-license
 

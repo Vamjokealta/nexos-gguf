@@ -408,7 +408,7 @@ export function createApiRouter(db: NexusDb, storage: StorageManager, queue: Que
 
     try {
       // Build zip of android directory, build files, gradle wrapper config, and workflow
-      execSync(`zip -r -q "${zipPath}" android README.md build.gradle.kts settings.gradle.kts gradle .github`, { cwd: process.cwd() });
+      execSync(`zip -r -q "${zipPath}" android README.md build.gradle settings.gradle gradle .github`, { cwd: process.cwd() });
       res.download(zipPath, 'nexus-gguf-agent-android-source.zip');
     } catch (err: any) {
       res.status(500).json({ error: 'Failed to create android source package: ' + err.message });

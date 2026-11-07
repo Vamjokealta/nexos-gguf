@@ -1,8 +1,21 @@
+# Dependencies & Build Outputs
 node_modules/
-build/
 dist/
+build/
 coverage/
-.DS_Store
+
+# Gradle & Android Build Artifacts (CRITICAL - DO NOT COMMIT)
+.gradle/
+*.lock
+*.bin
+build/
+*/build/
+android/app/build/
+.cxx/
+local.properties
+
+# Logs & System Files
 *.log
+.DS_Store
 .env*
 !.env.example
