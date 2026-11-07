@@ -930,6 +930,19 @@ export default function App() {
               </div>
             </div>
 
+            {/* Workflow Fix Notice */}
+            <div className="p-4 rounded-xl bg-amber-950/40 border border-amber-800/80 text-amber-200 text-xs flex items-start space-x-3">
+              <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <div className="font-semibold text-amber-300">GitHub Actions SDK Build Fix Applied</div>
+                <p className="text-amber-200/90 leading-relaxed">
+                  If your previous run hung on the <code className="bg-amber-900/60 px-1 py-0.5 rounded text-amber-100 font-mono">Set up Android SDK</code> or <code className="bg-amber-900/60 px-1 py-0.5 rounded text-amber-100 font-mono">sdkmanager</code> step, that was caused by an interactive pipe deadlock during license acceptance and third-party action download stalls.
+                  <br />
+                  The workflow <code className="bg-amber-900/60 px-1 py-0.5 rounded text-amber-100 font-mono">.github/workflows/build-apk.yml</code> has been updated to directly use the GitHub runner's preinstalled Android SDK (<code className="font-mono">/usr/local/lib/android/sdk</code>) with automated license hashes, target API 34, and a strict 12-minute timeout safeguard.
+                </p>
+              </div>
+            </div>
+
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Option 1: Direct Source & Build Automation Zip */}
