@@ -20,8 +20,8 @@ fi
 
 chmod +x ./gradlew
 
-echo "🔨 Compiling Android APK (:android:app:assembleDebug)..."
-./gradlew :android:app:assembleDebug
+echo "🔨 Compiling Android APK (assembleDebug)..."
+./gradlew assembleDebug || gradle assembleDebug
 
 echo "✅ Build completed successfully!"
 echo "APK Output location:"
