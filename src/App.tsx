@@ -82,7 +82,20 @@ interface DbStats {
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<'overview' | 'database' | 'apk'>('overview');
-  const [status, setStatus] = useState<DaemonStatus | null>(null);
+  const [status, setStatus] = useState<DaemonStatus>({
+    status: 'ONLINE',
+    uptimeSeconds: 0,
+    ramUsedMB: 64,
+    ramTotalMB: 512,
+    modelLoaded: false,
+    activeModelName: 'nexus-qwen2.5-0.5b-instruct-q4_k_m.gguf',
+    queuePendingCount: 0,
+    queueProcessingCount: 0,
+    queueCompletedCount: 0,
+    queueFailedCount: 0,
+    telegramConnected: false,
+    telegramMode: 'BOT_API',
+  });
   const [storage, setStorage] = useState<StorageMetrics | null>(null);
   const [queueItems, setQueueItems] = useState<QueueItem[]>([]);
   const [logs, setLogs] = useState<AuditLog[]>([]);
@@ -105,23 +118,34 @@ export default function App() {
   const [importResult, setImportResult] = useState<any | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Fetch initial telemetry and start polling
+  // Safe fetch helper that handles intermittent network blips or dev-server reload
+  const safeFetch = async <T,>(url: string, fallback: T): Promise<T> => {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return fallback;
+      return await res.json();
+    } catch {
+      return fallback;
+    }
+  };
+
+  // Fetch telemetry with graceful error recovery
   const fetchTelemetry = async () => {
     try {
       const [resStatus, resStorage, resQueue, resLogs, resDbStats] = await Promise.all([
-        fetch('/api/status').then(r => r.json()),
-        fetch('/api/storage').then(r => r.json()),
-        fetch('/api/queue').then(r => r.json()),
-        fetch('/api/logs?limit=15').then(r => r.json()),
-        fetch('/api/backup/stats').then(r => r.json()),
+        safeFetch<DaemonStatus | null>('/api/status', null),
+        safeFetch<StorageMetrics | null>('/api/storage', null),
+        safeFetch<{ items: QueueItem[] } | null>('/api/queue', null),
+        safeFetch<AuditLog[] | null>('/api/logs?limit=15', null),
+        safeFetch<DbStats | null>('/api/backup/stats', null),
       ]);
-      setStatus(resStatus);
-      setStorage(resStorage);
-      setQueueItems(resQueue.items || []);
-      setLogs(resLogs || []);
-      setDbStats(resDbStats);
-    } catch (err) {
-      console.error('Failed to poll telemetry:', err);
+      if (resStatus) setStatus(resStatus);
+      if (resStorage) setStorage(resStorage);
+      if (resQueue?.items) setQueueItems(resQueue.items);
+      if (resLogs) setLogs(resLogs);
+      if (resDbStats) setDbStats(resDbStats);
+    } catch {
+      // Gracefully maintain existing telemetry on blips
     }
   };
 
