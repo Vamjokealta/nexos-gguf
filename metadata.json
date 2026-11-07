@@ -1,0 +1,6 @@
+{
+  "name": "NEXUS GGUF AGENT",
+  "description": "Android ARM64 offline-first local AI agent and autonomous Telegram orchestrator powered by llama.cpp GGUF inference, RAG, and multi-source research.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

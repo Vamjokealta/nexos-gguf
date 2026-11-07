@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NEXUS GGUF AGENT</string>
+    <string name="channel_name">Nexus Background Service</string>
+    <string name="channel_description">Maintains offline local AI inference and Telegram orchestration</string>
+</resources>
